@@ -32,7 +32,7 @@ jobs:
           pyinstaller --onedir \
             --contents-directory "." \
             core.py \
-            --dist ./dist/output/core-ubuntu-22.04 \
+            --dist ./dist/output/core-ubuntu \
             --collect-submodules pyreadstat \
             --add-data="resources/cache:resources/cache" \
             --add-data="resources/templates:resources/templates" \
@@ -40,7 +40,7 @@ jobs:
             --add-data="tests/resources/datasets:tests/resources/datasets"
       - name: Prepare executable
         run: |
-          cd dist/output/core-ubuntu-22.04/core
+          cd dist/output/core-ubuntu/core
           chmod +x core
           file core  # Verify x86_64 architecture
           mv core cdisc-core-$(date +%Y%m%d)
@@ -48,5 +48,26 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cdisc-core-ubuntu-22.04
-          path: dist/output/core-ubuntu-22.04/core
+          name: cdisc-core-ubuntu
+          path: dist/output/core-ubuntu/core
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./cdisc-core-ubuntu.zip
+          asset_name: cdisc-core-ubuntu.zip
+          asset_content_type: application/zip
