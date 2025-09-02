@@ -51,6 +51,15 @@ jobs:
           name: cdisc-core-ubuntu
           path: dist/output/core-ubuntu/core
 
+      - name: Zip Release Artifact
+        run: |
+          # Create a zip file from the artifact directory
+          cd dist/output/core-ubuntu
+          zip -r ../../../cdisc-core-ubuntu.zip core
+          cd -
+          echo "Created zip file at $(pwd)/cdisc-core-ubuntu.zip"
+          ls -la cdisc-core-ubuntu.zip
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
