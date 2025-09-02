@@ -49,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: cdisc-core-ubuntu-22.04
-          path: dist/output/core-ubuntu-22.04/core/cdisc-core-*
+          path: dist/output/core-ubuntu-22.04/core
